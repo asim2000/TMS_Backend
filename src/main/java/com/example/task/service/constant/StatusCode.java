@@ -20,4 +20,5 @@ public class StatusCode {
     public static final Integer MessagingException = 657;
     public static final Integer USER_EXISTS = 634;
     public static final Integer EMAIL_NOT_CONFIRMED = 654;
+    public static final Integer INTERNAL_EXCEPTION = 500;
 }

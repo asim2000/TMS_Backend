@@ -3,6 +3,7 @@ package com.example.task.service.dto.task;
 import com.example.task.entity.Category;
 import com.example.task.entity.Priority;
 import com.example.task.entity.Progress;
+import com.example.task.service.dto.category.GetAllCategoryResponse;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -15,7 +16,7 @@ import java.time.LocalDate;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class GetAllTasksByFilterResponse {
     Integer id;
-    Category category;
+    GetAllCategoryResponse category;
     Priority priority;
     Progress progress;
     String title;

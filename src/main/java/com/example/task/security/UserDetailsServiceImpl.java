@@ -5,6 +5,8 @@ import com.example.task.repository.UserRepository;
 import com.example.task.service.constant.Message;
 import com.example.task.service.constant.StatusCode;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -12,6 +14,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 
 @Service
 @RequiredArgsConstructor
@@ -34,12 +38,12 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             }
         }
 
-        return new User(username, user.getPassword(),new ArrayList<>());
+        return new User(username, user.getPassword(), Collections.singleton(new SimpleGrantedAuthority("User")));
     }
 
     public UserDetails loadUserById(Integer id) {
         com.example.task.entity.User user = userRepository.findById(id).get();
-        return new User(user.getEmail(),user.getPassword(),new ArrayList<>());
+        return new User(user.getEmail(),user.getPassword(),Collections.singleton(new SimpleGrantedAuthority("User")));
     }
 
 }

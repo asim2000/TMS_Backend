@@ -1,5 +1,6 @@
 package com.example.task.security;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -28,11 +29,8 @@ import org.springframework.web.filter.CorsFilter;
 public class SecurityConfig {
     final UserDetailsServiceImpl userDetailsService;
 
-    final JwtAuthenticationEntryPoint handler;
-
-    final CustomAccessDeniedHandler customAccessDeniedHandler;
-
-     //CustomAuthenticationFailureHandler customAuthenticationFailureHandler;
+    final JwtAuthenticationEntryPoint authenticationHandler;
+    final CustomAccessDeniedHandler accessDeniedHandler;
 
     @Value("${task.remember.in}")
     Integer rememberMe;
@@ -84,17 +82,14 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(csrf -> csrf.disable())
-                 .exceptionHandling(exception -> exception.accessDeniedHandler(customAccessDeniedHandler))
-                 .exceptionHandling(exception -> exception.authenticationEntryPoint(handler))
+                 .exceptionHandling(exception -> exception.accessDeniedHandler(accessDeniedHandler))
+                 .exceptionHandling(exception -> exception.authenticationEntryPoint(authenticationHandler))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests(auth ->auth.anyRequest().permitAll()
+                .authorizeHttpRequests(auth ->auth.requestMatchers("/auth/**").permitAll().requestMatchers("/task/**","/category/**").hasAuthority("User").anyRequest().authenticated()
                 )
                 .rememberMe(httpSecurityRememberMeConfigurer -> httpSecurityRememberMeConfigurer.rememberMeServices(rememberMeServices()).key(SECRET_KEY).tokenValiditySeconds(rememberMe));
 
-        // fix H2 database console: Refused to display ' in a frame because it set 'X-Frame-Options' to 'deny'
         http.headers(headers -> headers.frameOptions(frameOption -> frameOption.sameOrigin()));
-
-        //http.authenticationProvider(authenticationProvider());
 
         http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 

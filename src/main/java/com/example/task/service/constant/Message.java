@@ -17,4 +17,5 @@ public class Message {
     public static final String CATEGORY_NOT_FOUND = "Category not found";
     public static final String USER_EXISTS = "User exists.Please login";
     public static final String EMAIL_NOT_CONFIRMED = "Please confirm account";
+    public static final String INTERNAL_EXCEPTION = "Internal exception";
 }
