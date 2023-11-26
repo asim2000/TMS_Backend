@@ -17,5 +17,5 @@ public class LoginRequest {
     @NotEmpty
     @NotNull
     String password;
-    boolean isRememberMe;
+    Boolean isRememberMe;
 }

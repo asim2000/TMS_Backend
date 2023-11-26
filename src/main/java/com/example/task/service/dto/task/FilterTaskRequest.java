@@ -2,6 +2,7 @@ package com.example.task.service.dto.task;
 
 import com.example.task.entity.Priority;
 import com.example.task.entity.Progress;
+import jakarta.persistence.Column;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 

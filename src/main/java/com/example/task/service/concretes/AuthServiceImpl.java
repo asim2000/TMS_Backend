@@ -43,15 +43,12 @@ public class AuthServiceImpl implements AuthService {
     final TokenBasedRememberMeServices tokenBasedRememberMeServices;
     final EmailService emailService;
     @Override
-    public DataResult<String> login(LoginRequest loginRequest, HttpServletRequest req, HttpServletResponse res) {
+    public DataResult<String> login(LoginRequest loginRequest) {
         authServiceRules.checkUserOnLogin(loginRequest.getUsername());
         UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword());
         Authentication auth = authenticationManager.authenticate(authToken);
         SecurityContextHolder.getContext().setAuthentication(auth);
-        if(loginRequest.isRememberMe()){
-            tokenBasedRememberMeServices.loginSuccess(req,res,auth);
-        }
-        String jwtToken = jwtTokenProvider.generateJwtToken(modelMapperService.forRequest().map(userRepository.findByEmailOrUsernameAndStatus(loginRequest.getUsername(),loginRequest.getUsername(), Status.ACTIVE),User.class));
+        String jwtToken = jwtTokenProvider.generateJwtToken(userRepository.findByEmailOrUsernameAndStatus(loginRequest.getUsername(),loginRequest.getUsername(), Status.ACTIVE),loginRequest.getIsRememberMe());
         return new DataResult<>(jwtToken, StatusCode.SUCCESSFULLY_LOGIN, Message.SUCCESSFULLY_LOGIN);
     }
 
@@ -64,7 +61,7 @@ public class AuthServiceImpl implements AuthService {
         request.setPassword(passwordEncoder.encode(request.getPassword()));
         User user = modelMapperService.forRequest().map(request,User.class);
         userRepository.save(user);
-        String token = jwtTokenProvider.generateJwtToken(user);
+        String token = jwtTokenProvider.generateJwtToken(user,false);
         String html = """
                 <!DOCTYPE html>
                 <html lang="en">

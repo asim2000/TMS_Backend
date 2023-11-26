@@ -14,10 +14,12 @@ public class JwtTokenProvider {
 
     @Value("${task.expires.in}")
     private Long EXPIRES_IN;
+    @Value("${task.remember.in}")
+    private Long REMEMBER_EXPIRE_IN;
 
-    public String generateJwtToken(User user) {
+    public String generateJwtToken(User user,Boolean isRememberMe) {
         Date now = new Date();
-        Date expireDate = new Date(now.getTime() + EXPIRES_IN);
+        Date expireDate = new Date(now.getTime() + (isRememberMe ? REMEMBER_EXPIRE_IN : EXPIRES_IN));
         return Jwts.builder().setSubject(Long.toString(user.getId()))
                 .setIssuedAt(now).setExpiration(expireDate)
                 .signWith(SignatureAlgorithm.HS512, APP_SECRET).compact();

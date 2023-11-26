@@ -8,7 +8,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 public interface AuthService {
-    DataResult<String> login(LoginRequest loginRequest, HttpServletRequest req, HttpServletResponse res);
+    DataResult<String> login(LoginRequest loginRequest);
     Result register(RegisterRequest request) throws MessagingException;
 
     Result forgotPassword(ForgotPasswordRequest forgotPasswordRequest) throws MessagingException;

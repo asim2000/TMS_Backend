@@ -23,8 +23,8 @@ import org.springframework.web.servlet.ModelAndView;
 public class AuthController {
     private final AuthService authService;
     @PostMapping("login")
-    public DataResult<String> login(@RequestBody @Valid LoginRequest loginRequest, HttpServletRequest req, HttpServletResponse res) {
-        return authService.login(loginRequest,req,res);
+    public DataResult<String> login(@RequestBody @Valid LoginRequest loginRequest) {
+        return authService.login(loginRequest);
     }
     @PostMapping("register")
     public Result register(@RequestBody @Valid RegisterRequest request) throws MessagingException{

@@ -81,11 +81,14 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
+                .addFilterBefore(corsFilter(),CorsFilter.class)
                 .csrf(csrf -> csrf.disable())
                  .exceptionHandling(exception -> exception.accessDeniedHandler(accessDeniedHandler))
                  .exceptionHandling(exception -> exception.authenticationEntryPoint(authenticationHandler))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests(auth ->auth.requestMatchers("/auth/**").permitAll().requestMatchers("/task/**","/category/**").hasAuthority("User").anyRequest().authenticated()
+                .authorizeHttpRequests(auth ->auth.requestMatchers("/auth/**").permitAll()
+                        .requestMatchers("/task/**","/category/**","/priority/**","/progress/**").hasAuthority("User")
+                        .anyRequest().authenticated()
                 )
                 .rememberMe(httpSecurityRememberMeConfigurer -> httpSecurityRememberMeConfigurer.rememberMeServices(rememberMeServices()).key(SECRET_KEY).tokenValiditySeconds(rememberMe));
 

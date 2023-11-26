@@ -35,6 +35,7 @@ public class CategoryServiceImpl implements CategoryService {
         userServiceRules.checkIfUserIsNull(user);
         Category category = modelMapperService.forRequest().map(createCategoryRequest, Category.class);
         category.getUser().setId(user.getId());
+        category.setId(null);
         categoryRepository.save(category);
         return new SuccessResult();
     }
